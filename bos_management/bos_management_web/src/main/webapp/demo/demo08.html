@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+
+	<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+	function addTabs() {
+		//判断选项卡是否存在
+		var result = $('#tt').tabs('exists','新选项卡面板');
+		if (result) {
+			//存在，选中
+			$('#tt').tabs('select','新选项卡面板');
+		}else {
+			//不存在，创建
+			$('#tt').tabs('add',{
+				title: '新选项卡面板',
+				selected: true
+			});
+		}
+	}
+</script>
+<script type="text/javascript">
+	$(function() {
+		var setting = {
+			data: {
+				simpleData: {
+					enable: true,
+					idKey: "id",
+					pIdKey: "pId",
+					rootPId: 0
+				}
+			},
+			callback: {
+				onClick: function(event, treeId, treeNode) {
+					
+					if(treeNode.pId !=0){
+						//判断选项卡是否存在
+						var result = $('#tt').tabs('exists',treeNode.name);
+						if (result) {
+							//存在，选中
+							$('#tt').tabs('select',treeNode.name);
+						}else {
+							//不存在，创建
+							$('#tt').tabs('add',{
+								title: treeNode.name,
+								selected: true,
+								content:'<iframe frameborder="0" height="100%" width="100%"  src="../'+ treeNode.page +'" ></iframe>'
+							});
+						}
+						
+					}
+				}
+			}
+
+
+		};
+		$.get("../data/menu.json",function(data){
+			$.fn.zTree.init($("#treeDemo"), setting, data);
+			
+		});
+		
+		
+		
+	});
+
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north'" style="height:50px"></div>
+		<div data-options="region:'west',split:true" title="West" style="width:200px;">
+	<div class="easyui-accordion" data-options="fit:'true'">
+		<div title="面板1">
+			<a id="btn" href="#" onclick="addTabs()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">添加选项卡</a>
+		</div>
+		<div title="面板2" data-options="selected:true">
+			<ul id="treeDemo" class="ztree"></ul>
+		</div>
+		<div title="面板3">面板3</div>
+	</div>
+		
+		</div>
+		<div data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
+		<div id="tt" class="easyui-tabs" data-options="fit:'true'">
+		
+	</div>
+		</div>
+</body>
+</html>
