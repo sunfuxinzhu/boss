@@ -54,6 +54,9 @@
 			function doRestore(){
 				alert("将取派员还原...");
 			}
+			function openSearchWindow(){
+				$("#searchWindow").window("open");
+			}
 			//工具栏
 			var toolbar = [ {
 				id : 'button-add',	
@@ -75,6 +78,11 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
+			},{
+				id : 'button-search',
+				text : '查询',
+				iconCls : 'icon-search',
+				handler : openSearchWindow
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -202,7 +210,32 @@
 				}
 			}
 			
-			
+			$.fn.serializeJson=function(){  
+	            var serializeObj={}; 
+	            //input节点中数据name和value
+	            var array=this.serializeArray();  
+	            var str=this.serialize();  
+	            $(array).each(function(){  
+	                if(serializeObj[this.name]){  
+	                    if($.isArray(serializeObj[this.name])){  
+	                        serializeObj[this.name].push(this.value);  
+	                    }else{  
+	                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+	                    }  
+	                }else{  
+	                    serializeObj[this.name]=this.value;   
+	                }  
+	            });  
+	            return serializeObj;  
+	        }; 
+			//查询快递员
+			function doSearch() {
+				var result = $("#searchForm").serializeJson();
+				
+				$('#grid').datagrid('load',result);
+
+
+			}
 	
 			
 		</script>
@@ -316,7 +349,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+							<td colspan="2"><a id="searchBtn" onclick="doSearch()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
 						</tr>
 					</table>
 				</form>
