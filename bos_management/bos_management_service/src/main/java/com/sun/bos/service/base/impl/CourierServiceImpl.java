@@ -1,5 +1,9 @@
 package com.sun.bos.service.base.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +35,18 @@ public class CourierServiceImpl implements CourierService {
     @Override
     public Page<Courier> findAll(Pageable pageable) {
         return courierRepository.findAll(pageable);
+    }
+
+    @Override
+    public void batchDel(String ids) {
+        //ids要判空
+        if (StringUtils.isNotEmpty(ids)) {
+            String[] strings = ids.split(",");
+            for (String string : strings) {
+                courierRepository.updateDelTagById(Long.parseLong(string));
+            }
+        }
+        
     }
 
 }

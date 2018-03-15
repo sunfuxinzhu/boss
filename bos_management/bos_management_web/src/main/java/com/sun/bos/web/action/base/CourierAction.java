@@ -1,6 +1,7 @@
 package com.sun.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,17 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
         response.getWriter().write(json);
         
         return NONE;
+    }
+    private String ids;
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+    
+    @Action(value="courierAction_batchDel",results={@Result(name="success",location="/pages/base/courier.html",type="redirect")})
+    public String batchDel(){
+        
+        courierService.batchDel(ids);
+        return SUCCESS;
     }
 }
   
