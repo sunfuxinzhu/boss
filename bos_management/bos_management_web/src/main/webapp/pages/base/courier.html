@@ -127,6 +127,8 @@
 				align : 'center'
 			} ] ];
 			
+			
+			//快递员的分页查询
 			$(function(){
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
@@ -141,7 +143,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/courier.json",
+					url : "../../courierAction_pageQuery.action",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -163,6 +165,23 @@
 			function doDblClickRow(){
 				alert("双击表格数据...");
 			}
+
+			//保存快递员信息
+			function submitData(){
+				var result = $("#courierForm").form("validate");
+				if (result) {
+					//数据齐全，执行保存
+					$("#courierForm").submit();
+				}else {
+					//数据不完整，提示用户
+					$.messager.alert('提示信息','请把数据补充完整！','info');
+
+				}
+			}
+			
+			
+	
+			
 		</script>
 	</head>
 
@@ -173,12 +192,12 @@
 		<div class="easyui-window" title="对收派员进行添加或者修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a id="save" onclick="submitData()" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
 				</div>
 			</div>
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
-				<form>
+				<form id="courierForm" method="post" action="../../courierAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="4">收派员信息</td>

@@ -21,37 +21,40 @@ import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import com.sun.bos.domain.base.Standard;
-import com.sun.bos.service.base.StandardService;
+import com.sun.bos.domain.base.Courier;
+import com.sun.bos.service.base.CourierService;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 /**  
- * ClassName:StandardAction <br/>  
+ * ClassName:CourierAction <br/>  
  * Function:  <br/>  
- * Date:     2018年3月14日 下午3:21:31 <br/>       
+ * Date:     2018年3月15日 下午4:03:02 <br/>       
  */
+
 @Namespace("/")
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class StandardAction extends ActionSupport implements ModelDriven<Standard> {
+public class CourierAction extends ActionSupport implements ModelDriven<Courier> {
+
+    private Courier model = new Courier();
     
-    private Standard model = new Standard();
     @Override
-    public Standard getModel() {
+    public Courier getModel() {
         return model;
     }
-    @Autowired
-    private StandardService standardService;
     
-    @Action(value="standardAction_save",results={@Result(name="success",location="/pages/base/standard.html",type="redirect")})
+    @Autowired
+    private CourierService courierService;
+    
+    @Action(value="courierAction_save",results={@Result(name="success",location="/pages/base/courier.html",type="redirect")})
     public String save(){
-        standardService.save(model);
+        courierService.save(model);
         return SUCCESS;
     }
-    
+    //属性驱动获取参数
     private int page;
     public void setPage(int page) {
         this.page = page;
@@ -61,45 +64,33 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
         this.rows = rows;
     }
     
-    @Action("standardAction_pageQuery")
-    public String pageQuery() throws IOException{
+    
+    @Action(value="courierAction_pageQuery")
+    public String findAll() throws IOException{
         Pageable pageable = new PageRequest(page-1, rows);
-        Page<Standard> pageList = standardService.findAll(pageable);
+        Page<Courier> page = courierService.findAll(pageable);
         
-        //获取两个属性值
-        long total = pageList.getTotalElements();
-        List<Standard> list = pageList.getContent();
+        //获得数据
+        long total = page.getTotalElements();
+        List<Courier> list = page.getContent();
         
-        
-        //封装
+        //封装map
         Map<String, Object> map = new HashMap<>();
         map.put("total", total);
         map.put("rows", list);
-        //转化为json
-        String json = JSONObject.fromObject(map).toString();
+        //选择不用的字段
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas","takeTime"});
         
-        //传回去
+        
+        //转为json并传回页面
+        String json = JSONObject.fromObject(map,jsonConfig).toString();
         HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=utf-8");
         
+        response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);
         
         return NONE;
     }
-    
-    @Action("standard_findAll")
-    public String findAll() throws IOException{
-        
-        Page<Standard> page = standardService.findAll(null);
-        List<Standard> list = page.getContent();
-        String json = JSONArray.fromObject(list).toString();
-        
-        
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write(json);
-        return NONE;
-    }
-    
 }
   
