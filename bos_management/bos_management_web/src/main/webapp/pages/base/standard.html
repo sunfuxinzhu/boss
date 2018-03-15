@@ -30,7 +30,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standardAction_pageQuery.action",
 					idField : 'id',
 					columns : columns
 				});
@@ -50,7 +50,17 @@
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					//判断选中条数
+					var result = $("#grid").datagrid("getSelections");
+					if (result.length==1) {
+						//执行修改
+						$("#standardWindow").window("open");
+						$("#standardForm").form("load",result[0])
+						
+					}else {
+						//提示用户
+						$.messager.alert("提示信息","只能选中一条数据进行修改","info");
+					}
 				}
 			},{
 				id : 'button-delete',

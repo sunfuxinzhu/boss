@@ -53,7 +53,7 @@ public class StandardRepositoryTest {
     }
     @Test
     public void test5() {
-        standardRepository.delete(2L);
+        standardRepository.delete(3L);
     }
     @Test
     public void test6() {
