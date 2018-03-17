@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.sun.bos.domain.base.Standard;
 import com.sun.bos.service.base.StandardService;
+import com.sun.bos.web.action.CommonAction;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -36,19 +37,20 @@ import net.sf.json.JSONObject;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class StandardAction extends ActionSupport implements ModelDriven<Standard> {
+public class StandardAction extends CommonAction<Standard> {
     
-    private Standard model = new Standard();
-    @Override
-    public Standard getModel() {
-        return model;
+    public StandardAction() {
+          
+        super(Standard.class);  
+        
     }
+
     @Autowired
     private StandardService standardService;
     
     @Action(value="standardAction_save",results={@Result(name="success",location="/pages/base/standard.html",type="redirect")})
     public String save(){
-        standardService.save(model);
+        standardService.save(getModel());
         return SUCCESS;
     }
     
@@ -66,23 +68,7 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
         Pageable pageable = new PageRequest(page-1, rows);
         Page<Standard> pageList = standardService.findAll(pageable);
         
-        //获取两个属性值
-        long total = pageList.getTotalElements();
-        List<Standard> list = pageList.getContent();
-        
-        
-        //封装
-        Map<String, Object> map = new HashMap<>();
-        map.put("total", total);
-        map.put("rows", list);
-        //转化为json
-        String json = JSONObject.fromObject(map).toString();
-        
-        //传回去
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=utf-8");
-        
-        response.getWriter().write(json);
+        page2Json(pageList, null);
         
         return NONE;
     }
