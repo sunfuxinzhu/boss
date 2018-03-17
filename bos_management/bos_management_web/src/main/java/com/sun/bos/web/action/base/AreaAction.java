@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,6 +34,7 @@ import com.sun.bos.service.base.AreaService;
 import com.sun.bos.web.action.CommonAction;
 import com.sun.utils.PinYin4jUtils;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -122,6 +124,27 @@ public class AreaAction extends CommonAction<Area> {
        
         
         return NONE;
+    }
+    private String q;
+    public void setQ(String q) {
+        this.q = q;
+    }
+    @Action("areaAction_findAll")
+    public String findAll() throws IOException{
+        List<Area> list;
+       if (StringUtils.isEmpty(q)) {
+           Page<Area> page = areaService.findAll(null);
+           list = page.getContent();
+       }else{
+           list =areaService.findByQ(q);
+       }
+        
+       
+       JsonConfig jsonConfig = new JsonConfig();
+       jsonConfig.setExcludes(new String[] {"subareas"});
+       
+       list2json(list, jsonConfig);
+       return NONE;
     }
 }
   
