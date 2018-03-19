@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
 public class FixedArea {
 
     @Id
+    @GeneratedValue
     @Column(name = "C_ID")
     private Long id; // 主键
     @Column(name = "C_FIXED_AREA_NAME", unique = true)
@@ -42,10 +45,10 @@ public class FixedArea {
     @Column(name = "C_OPERATING_COMPANY")
     private String operatingCompany; // 操作单位
 
-    @OneToMany(mappedBy = "fixedArea")
+    @OneToMany(mappedBy = "fixedArea",fetch=FetchType.EAGER)
     private Set<SubArea> subareas = new HashSet<SubArea>(0);
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "T_FIXEDAREA_COURIER",
             joinColumns = {@JoinColumn(name = "C_FIXED_AREA_ID",
                     referencedColumnName = "C_ID")},

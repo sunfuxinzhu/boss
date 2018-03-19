@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import com.sun.bos.domain.base.Area;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -30,15 +28,17 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
     private Class<T> clazz;
     public CommonAction(Class<T> clazz) {
         this.clazz=clazz;
-    }
-
-    @Override
-    public T getModel() {
         try {
             model=clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();  
+            
         }
+    }
+
+    @Override
+    public T getModel() {
+        
         return model;
     }
     protected int page;

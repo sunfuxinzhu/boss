@@ -159,7 +159,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/sub_area.json",
+					url : "../../subareaAction_pageQuery.action",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -204,7 +204,15 @@
 				alert("双击表格数据...");
 			}
 			function submitData() {
-				
+				//校验数据
+				var result = $("#subareaForm").form("validate");
+				if (result) {
+					//保存
+					$("#subareaForm").submit()
+				}else {
+					//提示客户
+					$.messager.alert("提示信息","请填充完整","info");
+				}
 			}
 		</script>
 	</head>

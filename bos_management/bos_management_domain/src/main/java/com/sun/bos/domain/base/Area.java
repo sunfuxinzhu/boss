@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -34,7 +35,7 @@ public class Area {
     @Column(name = "C_SHORTCODE")
     private String shortcode; // 简码
 
-    @OneToMany(mappedBy = "area")
+    @OneToMany(mappedBy = "area",fetch=FetchType.EAGER)
     private Set<SubArea> subareas = new HashSet<SubArea>();
 
     public String getName() {

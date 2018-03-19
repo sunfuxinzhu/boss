@@ -1,0 +1,61 @@
+package com.sun.bos.web.action.base;
+
+import java.io.IOException;
+
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.sun.bos.domain.base.Standard;
+import com.sun.bos.domain.base.SubArea;
+import com.sun.bos.service.base.SubAreaService;
+import com.sun.bos.web.action.CommonAction;
+
+import net.sf.json.JsonConfig;
+
+/**  
+ * ClassName:SubAreaAction <br/>  
+ * Function:  <br/>  
+ * Date:     2018年3月18日 上午12:37:26 <br/>       
+ */
+@Namespace("/")
+@ParentPackage("struts-default")
+@Controller
+@Scope("prototype")
+public class SubAreaAction extends CommonAction<SubArea> {
+
+    public SubAreaAction() {
+        super(SubArea.class);  
+    }
+    
+    @Autowired
+    private SubAreaService subAreaService;
+    
+    @Action(value="subareaAction_save",results={@Result(name="success",location="/pages/base/sub_area.html",type="redirect")})
+    public String save(){
+        subAreaService.save(getModel());
+        return SUCCESS;
+    }
+    
+    @Action("subareaAction_pageQuery")
+    public String pageQuery() throws IOException{
+        Pageable pageable = new PageRequest(page-1, rows);
+        Page<SubArea> pageList = subAreaService.findAll(pageable);
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"subareas"});
+        
+        page2Json(pageList, jsonConfig);
+        
+        return NONE;
+    }
+}
+  
