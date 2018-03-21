@@ -30,9 +30,38 @@
 			function doSearch(){
 				$('#searchWindow').window("open");
 			}
-			
 			function doAssociations(){
-				$('#customerWindow').window('open');
+					$('#customerWindow').window('open');
+				
+			}
+			function doCustomerAssociations(){
+				var rows = $("#grid").datagrid('getSelections');
+				if (rows.length==1) {
+					$('#customerWindow').window('open');
+					$("#noassociationSelect").empty()
+					$("#associationSelect").empty()
+					//查询未关联的客户信息
+					$.post("../../fixedAreaAction_findUnAssociatedCustomers.action",function(data){
+						for (var i = 0; i < data.length; i++) {
+							var id = data[i].id;
+							var username = data[i].username;
+							var telephone = data[i].telephone;
+							$("#noassociationSelect").append("<option value='"+id+"'>"+username+"["+telephone+"]</option>");
+						}
+					})
+					//查询已关联该定区的客户信息
+					$.post("../../fixedAreaAction_findAssociatedCustomers.action",{id:rows[0].id},function(data){
+						for (var i = 0; i < data.length; i++) {
+							var id = data[i].id;
+							var username = data[i].username;
+							var telephone = data[i].telephone;
+							$("#associationSelect").append("<option value='"+id+"'>"+username+"["+telephone+"]</option>");
+						}
+					})
+				}else {
+					$.messager.alert("提示信息","只能选择一条数据","warning")
+				}
+				
 			}
 			
 			//工具栏
@@ -60,7 +89,7 @@
 				id : 'button-association',
 				text : '关联客户',
 				iconCls : 'icon-sum',
-				handler : doAssociations
+				handler : doCustomerAssociations
 			},{
 				id : 'button-association-courier',
 				text : '关联快递员',
@@ -375,25 +404,49 @@
 						<tr>
 							<td>
 								<input type="hidden" name="id" id="customerFixedAreaId" />
+								<!-- multiple一次选中多条size下拉框尺寸 -->
 								<select id="noassociationSelect" multiple="multiple" size="10"></select>
 							</td>
 							<td>
-								<input type="button" value="》》" id="toRight">
+								<input type="button" value="》》" onclick="move2right()" id="toRight">
 								<br/>
-								<input type="button" value="《《" id="toLeft">
+								<input type="button" value="《《" onclick="move2left()" id="toLeft">
 							</td>
 							<td>
 								<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
 							</td>
 						</tr>
 						<tr>
-							<td colspan="3"><a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
+							<td colspan="3"><a id="associationBtn" onclick="associateCustomer2FixedArea()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
 						</tr>
 					</table>
 				</form>
 			</div>
 		</div>
+		<script type="text/javascript">
+			function move2right() {
+				$("#associationSelect").append(
+						$("#noassociationSelect option:selected"))
+			}
+			function move2left() {
+				$("#noassociationSelect").append(
+						$("#associationSelect option:selected"))
+			}
+			function associateCustomer2FixedArea() {
+
+				// 给定区ID赋值
+				var rows = $("#grid").datagrid("getSelections");
+
+				$("#customerFixedAreaId").val(rows[0].id)
+				// 选中右侧的下拉框中所有的数据
+
+				$("#associationSelect option").attr("selected", "selected")
+
+				// 提交表单
+				$("#customerForm").submit();
+			}
 		
+		</script>
 		<!-- 关联快递员窗口 -->
 		<div class="easyui-window" title="关联快递员窗口" id="courierWindow" modal="true"
 			collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 700px;height: 300px;">

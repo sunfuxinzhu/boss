@@ -2,8 +2,12 @@ package com.sun.bos.dao.test;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.bos.dao.base.StandardRepository;
 import com.sun.bos.domain.base.Standard;
+import com.sun.crm.domain.Customer;
 
 /**  
  * ClassName:StandardRepositoryTest <br/>  
@@ -89,6 +94,16 @@ public class StandardRepositoryTest {
     @Test
     public void test10() {
         standardRepository.deleteByName("张三");
+    }
+    @Test
+    public void test11() {
+        Collection<? extends Customer> collection = WebClient.create("http://localhost:8180/crm/webService/customerService/findAll")
+        .type(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .getCollection(Customer.class);
+        for (Customer customer : collection) {
+            System.out.println(customer);
+        }
     }
 }
   
