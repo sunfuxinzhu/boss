@@ -24,6 +24,8 @@ import com.sun.bos.service.base.FixedAreaService;
 import com.sun.bos.web.action.CommonAction;
 import com.sun.crm.domain.Customer;
 
+import net.sf.json.JsonConfig;
+
 /**  
  * ClassName:FixedAreaAction <br/>  
  * Function:  <br/>  
@@ -52,7 +54,10 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         Pageable pageable = new PageRequest(page-1, rows);
         Page<FixedArea> pageList = fixedAreaService.findAll(pageable);
         
-        page2Json(pageList, null);
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"couriers","subareas"});
+        
+        page2Json(pageList, jsonConfig);
         
         return NONE;
     }
@@ -90,6 +95,25 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .put(null);
+        return SUCCESS;
+    }
+    
+    private Long courierId;
+    private Long takeTimeId;
+    public void setCourierId(Long courierId) {
+        this.courierId = courierId;
+    }
+    public void setTakeTimeId(Long takeTimeId) {
+        this.takeTimeId = takeTimeId;
+    }
+    
+    
+    //关联快递员
+    @Action(value = "fixedAreaAction_associationCourierToFixedArea",results={@Result(name="success",location="/pages/base/fixed_area.html",type="redirect")})
+    public String associationCourierToFixedArea() throws IOException{
+        fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
+        
+        
         return SUCCESS;
     }
 }

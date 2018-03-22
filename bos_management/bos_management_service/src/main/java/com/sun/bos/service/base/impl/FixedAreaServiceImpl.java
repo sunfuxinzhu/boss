@@ -6,9 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sun.bos.dao.base.CourierRepository;
 import com.sun.bos.dao.base.FixedAreaRepository;
 import com.sun.bos.dao.base.StandardRepository;
+import com.sun.bos.dao.base.TakeTimeRepository;
+import com.sun.bos.domain.base.Courier;
 import com.sun.bos.domain.base.FixedArea;
+import com.sun.bos.domain.base.TakeTime;
 import com.sun.bos.service.base.FixedAreaService;
 
 /**  
@@ -21,6 +25,10 @@ import com.sun.bos.service.base.FixedAreaService;
 public class FixedAreaServiceImpl implements FixedAreaService {
     @Autowired
     private FixedAreaRepository fixedAreaRepository;
+    @Autowired
+    private CourierRepository courierRepository;
+    @Autowired
+    private TakeTimeRepository takeTimeRepository;
 
     @Override
     public void save(FixedArea model) {
@@ -30,6 +38,17 @@ public class FixedAreaServiceImpl implements FixedAreaService {
     @Override
     public Page<FixedArea> findAll(Pageable pageable) {
         return fixedAreaRepository.findAll(pageable);
+    }
+
+    @Override
+    public void associationCourierToFixedArea(Long id, Long courierId, Long takeTimeId) {
+        FixedArea fixedArea = fixedAreaRepository.findOne(id);
+        Courier courier = courierRepository.findOne(courierId);
+        TakeTime takeTime = takeTimeRepository.findOne(takeTimeId);
+        
+        courier.setTakeTime(takeTime);
+        fixedArea.getCouriers().add(courier);
+        
     }
 }
   

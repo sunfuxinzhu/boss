@@ -55,5 +55,10 @@ public class CourierServiceImpl implements CourierService {
         return courierRepository.findAll(specification, pageable);
     }
 
+    @Override
+    public List<Courier> listajax() {
+        return courierRepository.findByDeltagIsNull();
+    }
+
 }
   

@@ -48,7 +48,7 @@ public class FixedArea {
     @OneToMany(mappedBy = "fixedArea",fetch=FetchType.EAGER)
     private Set<SubArea> subareas = new HashSet<SubArea>(0);
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "T_FIXEDAREA_COURIER",
             joinColumns = {@JoinColumn(name = "C_FIXED_AREA_ID",
                     referencedColumnName = "C_ID")},
