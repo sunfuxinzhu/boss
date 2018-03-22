@@ -49,10 +49,26 @@ public interface CustomerService {
             @QueryParam("fixedAreaId") String fixedAreaId);
 
     
-    
+    //保存
     @POST
     @Path("/save")
     void save(Customer customer);
+    
+    //激活
+    @PUT
+    @Path("/active")
+    void active(@QueryParam("telephone") String telephone);
+    
+ // 检查用户是否激活
+    @GET
+    @Path("/isActived")
+    Customer isActived(@QueryParam("telephone") String telephone);
+
+    // 登录
+    @GET
+    @Path("/login")
+    Customer login(@QueryParam("telephone") String telephone,@QueryParam("password") String password);
+    
 }
 
   
