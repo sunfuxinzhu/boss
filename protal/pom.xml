@@ -9,4 +9,11 @@
   <artifactId>protal</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.sun</groupId>
+  		<artifactId>sunUtils</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
