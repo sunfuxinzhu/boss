@@ -68,6 +68,10 @@ public interface CustomerService {
     @GET
     @Path("/login")
     Customer login(@QueryParam("telephone") String telephone,@QueryParam("password") String password);
+
+    @GET
+    @Path("/findfixedAreaIdByAddress")
+    String findFixedAreaIdByAddress(@QueryParam("address") String address );
     
 }
 

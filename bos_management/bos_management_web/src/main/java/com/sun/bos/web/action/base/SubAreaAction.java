@@ -52,7 +52,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         Page<SubArea> pageList = subAreaService.findAll(pageable);
         
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas"});
+        jsonConfig.setExcludes(new String[] {"subareas","couriers"});
         
         page2Json(pageList, jsonConfig);
         
