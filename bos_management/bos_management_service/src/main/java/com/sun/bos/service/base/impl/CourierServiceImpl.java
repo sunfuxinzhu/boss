@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,9 @@ public class CourierServiceImpl implements CourierService {
     public Page<Courier> findAll(Pageable pageable) {
         return courierRepository.findAll(pageable);
     }
-
+    // 批量删除
+    @RequiresPermissions("batchDel")
+    // 在调用方法时,框架就会检查当前用户是否有对应的权限,如果有就放行,没有就抛异常
     @Override
     public void batchDel(String ids) {
         //ids要判空
