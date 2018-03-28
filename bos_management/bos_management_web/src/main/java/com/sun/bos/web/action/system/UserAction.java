@@ -2,6 +2,8 @@ package com.sun.bos.web.action.system;
 
 import com.sun.bos.web.action.CommonAction;
 
+import freemarker.template.utility.SecurityUtilities;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -74,6 +76,14 @@ public class UserAction extends CommonAction<User> {
         
         
         return LOGIN;
+    }
+    
+    @Action(value="userAction_logout",results={@Result(name="success",location="/login.html",type="redirect")})
+    public String logout(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        
+        return SUCCESS;
     }
 }
   
