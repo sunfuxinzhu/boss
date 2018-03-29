@@ -1,6 +1,7 @@
 package com.sun.bos.web.action.system;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -62,6 +63,21 @@ public class PermissionAction extends CommonAction<Permission> {
         permissionService.save(getModel());
         
         return SUCCESS;
+    }
+    
+    
+    @Action("permissionAction_findAll")
+    public String findAll() throws IOException{
+        Page<Permission> page = permissionService.findAll(null);
+        List<Permission> list = page.getContent();
+        
+      //转化为json
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles","childrenMenus","parentMenu"});
+        
+        list2json(list, jsonConfig);
+        
+        return NONE;
     }
 
 }

@@ -58,7 +58,7 @@ public class MenuAction extends CommonAction<Menu> {
         return SUCCESS;
     }
     
-    @Action("menuActioin_pageQuery")
+    @Action("menuAction_pageQuery")
     public String pageQuery() throws IOException{
         Pageable pageable = new PageRequest(Integer.parseInt(getModel().getPage())-1, rows);
         Page<Menu> pageList = menuService.findAll(pageable);
