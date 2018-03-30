@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sun.bos.dao.base.AreaRepository;
 import com.sun.bos.dao.base.FixedAreaRepository;
 import com.sun.bos.dao.take_delivery.OrderRepository;
-import com.sun.bos.dao.take_delivery.WorkBillRepoditory;
+import com.sun.bos.dao.take_delivery.WorkBillRepository;
 import com.sun.bos.domain.base.Area;
 import com.sun.bos.domain.base.Courier;
 import com.sun.bos.domain.base.FixedArea;
@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private FixedAreaRepository fixedAreaRepository;
 
     @Autowired
-    private WorkBillRepoditory workBillRepoditory;
+    private WorkBillRepository workBillRepoditory;
     
     @Override
     public void saveOrder(Order order) {

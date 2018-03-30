@@ -9,7 +9,7 @@ import com.sun.bos.domain.take_delivary.WorkBill;
  * Function:  <br/>  
  * Date:     2018年3月24日 下午4:58:06 <br/>       
  */
-public interface WorkBillRepoditory extends JpaRepository<WorkBill, Long> {
+public interface WorkBillRepository extends JpaRepository<WorkBill, Long> {
 
 }
   

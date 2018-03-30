@@ -101,11 +101,13 @@ public class MenuAction extends CommonAction<Menu> {
                 if (menu.getParentMenu()==null) {
                     return new JSONObject().element("pId", 0L)
                                             .element("id", menu.getId())
-                                            .element("name", menu.getName());
+                                            .element("name", menu.getName())
+                                            .element("page", menu.getPage());
                 }else{
                     return new JSONObject().element("pId", menu.getParentMenu().getId())
                             .element("id", menu.getId())
-                            .element("name", menu.getName());
+                            .element("name", menu.getName())
+                            .element("page", menu.getPage());
                     
                 }
             }
