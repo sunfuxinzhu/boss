@@ -1,6 +1,7 @@
 package com.sun.bos.web.action.system;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -18,6 +19,7 @@ import com.sun.bos.dao.system.MenuRepository;
 import com.sun.bos.dao.system.PermissionRepository;
 import com.sun.bos.dao.system.RoleRepository;
 import com.sun.bos.domain.system.Menu;
+import com.sun.bos.domain.system.Permission;
 import com.sun.bos.domain.system.Role;
 import com.sun.bos.service.system.RoleService;
 import com.sun.bos.web.action.CommonAction;
@@ -81,6 +83,20 @@ public class RoleAction extends CommonAction<Role> {
         roleService.save(getModel(),menuIds,permissionIds);
         
         return SUCCESS;
+    }
+    
+    @Action("roleAction_findAll")
+    public String findAll() throws IOException{
+        Page<Role> page = roleService.findAll(null);
+        List<Role> list = page.getContent();
+        
+      //转化为json
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"menus","users","permissions"});
+        
+        list2json(list, jsonConfig);
+        
+        return NONE;
     }
 }
   

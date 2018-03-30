@@ -3,6 +3,10 @@ package com.sun.bos.web.action.system;
 import com.sun.bos.web.action.CommonAction;
 
 import freemarker.template.utility.SecurityUtilities;
+import net.sf.json.JsonConfig;
+
+import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -16,10 +20,17 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
+import com.sun.bos.domain.system.Permission;
+import com.sun.bos.domain.system.Role;
 import com.sun.bos.domain.system.User;
+import com.sun.bos.service.system.UserService;
 
 
 /**  
@@ -36,6 +47,9 @@ public class UserAction extends CommonAction<User> {
     public UserAction() {
         super(User.class);  
     }
+    
+    @Autowired
+    private UserService userService;
 
     private String checkcode;
     public void setCheckcode(String checkcode) {
@@ -85,5 +99,35 @@ public class UserAction extends CommonAction<User> {
         
         return SUCCESS;
     }
+    
+    private Long[] roleIds;
+    public void setRoleIds(Long[] roleIds) {
+        this.roleIds = roleIds;
+    }
+    
+    @Action(value="userAction_save",results={@Result(name="success",location="/pages/system/userlist.html",type="redirect")})
+    public String save(){
+        userService.save(getModel(),roleIds);
+        
+        return SUCCESS;
+    }
+    
+    
+    @Action("userAction_pageQuery")
+    public String pageQuery() throws IOException{
+        Pageable pageable = new PageRequest(page-1, rows);
+        Page<User> pageList = userService.findAll(pageable);
+        
+        //转化为json
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles"});
+        
+        page2Json(pageList,jsonConfig);
+        
+       
+        
+        return NONE;
+    }
+    
 }
   
