@@ -3,6 +3,8 @@ package com.sun.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -17,10 +19,14 @@ import org.springframework.stereotype.Controller;
 import com.sun.bos.dao.system.MenuRepository;
 import com.sun.bos.domain.base.Area;
 import com.sun.bos.domain.system.Menu;
+import com.sun.bos.domain.system.Role;
+import com.sun.bos.domain.system.User;
 import com.sun.bos.service.system.MenuService;
 import com.sun.bos.web.action.CommonAction;
 
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonBeanProcessor;
 
 
 /**  
@@ -71,6 +77,41 @@ public class MenuAction extends CommonAction<Menu> {
         
        
         
+        return NONE;
+    }
+    
+    
+    @Action("menuAction_findbyUser")
+    public String findbyUser() throws IOException{
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        
+        List<Menu> list = menuService.findbyUser(user);
+        
+      //转化为json
+        JsonConfig jsonConfig = new JsonConfig();
+        
+        
+        jsonConfig.registerJsonBeanProcessor(Menu.class,new JsonBeanProcessor() {
+            
+            @Override
+            public JSONObject processBean(Object obj, JsonConfig cfg) {
+                Menu menu = (Menu) obj;
+                if (menu.getParentMenu()==null) {
+                    return new JSONObject().element("pId", 0L)
+                                            .element("id", menu.getId())
+                                            .element("name", menu.getName());
+                }else{
+                    return new JSONObject().element("pId", menu.getParentMenu().getId())
+                            .element("id", menu.getId())
+                            .element("name", menu.getName());
+                    
+                }
+            }
+        });
+        jsonConfig.setExcludes(new String[] {"roles","childrenMenus","parentMenu"});
+        list2json(list, jsonConfig);
         return NONE;
     }
 }
