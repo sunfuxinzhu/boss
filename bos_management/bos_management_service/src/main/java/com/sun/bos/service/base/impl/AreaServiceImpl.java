@@ -41,5 +41,10 @@ public class AreaServiceImpl implements AreaService {
         
         return areaRepository.findQ(q);
     }
+
+    @Override
+    public List<Object[]> exportCharts() {
+        return areaRepository.exportCharts();
+    }
 }
   

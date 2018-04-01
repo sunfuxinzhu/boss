@@ -17,5 +17,9 @@ public interface AreaRepository extends JpaRepository<Area, Long> {
     List<Area> findQ(String q);
     
     Area findByProvinceAndCityAndDistrict(String province,String city,String district);
+
+    
+    @Query("select t.province,count(*) from Area t group by t.province")
+    List<Object[]> exportCharts();
 }
   

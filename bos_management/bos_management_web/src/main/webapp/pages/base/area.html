@@ -15,6 +15,9 @@
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript" src="../../js/jquery.ocupload-1.1.2.js"></script>
+		<script src="../../js/highcharts/highcharts.js"></script>
+	<script src="../../js/highcharts/modules/exporting.js"></script>
+	<script src="../../js/highcharts/highcharts-zh_CN.js"></script>
 		<script type="text/javascript">
 			function doAdd(){
 				$('#addWindow').window("open");
@@ -32,6 +35,30 @@
 				//发送一个请求,查询数据,拼装文件
 				window.location.href="../../areaAction_exportExcel.action"
 			}
+			//导出PDF
+			function doExportFPF() {
+				//发送一个请求,查询数据,拼装文件
+				window.location.href="../../areaAction_exportPDF.action"
+			}
+			//导出图表
+			function doExportHcharts() {
+				$("#chartWindow").window("open");
+				$.post("../../areaAction_exportCharts.action",function(data){
+					$('#container').highcharts({
+				        title: {
+				            text: '区域数量占比'
+				        },
+				        series: [{
+				            type: 'pie',
+				            name: '区域数量占比',
+				            data: data
+				        }]
+				    });
+					
+				})
+				
+			}
+			
 			
 			//工具栏
 			var toolbar = [ {
@@ -58,6 +85,16 @@
 				text : '导出Excel',
 				iconCls : 'icon-redo',
 				handler : doExportExcel
+			}, {
+				id : 'button-Hcharts',
+				text : '导出图表',
+				iconCls : 'icon-redo',
+				handler : doExportHcharts
+			}, {
+				id : 'button-PDF',
+				text : '导出PDF',
+				iconCls : 'icon-redo',
+				handler : doExportFPF
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -126,6 +163,14 @@
 			        height: 400,
 			        resizable:false
 			    });
+				$('#chartWindow').window({
+			        width: 700,
+			        modal: true,
+			        shadow: true,
+			        closed: true,
+			        height: 600,
+			        resizable:false
+			    });
 				
 			});
 		
@@ -192,6 +237,12 @@
 					</table>
 				</form>
 			</div>
+		</div>
+		
+		<div class="easyui-window" title="区域分布图" id="chartWindow" collapsible="false" 
+				minimizable="false" maximizable="false" style="top:20px;left:200px">
+			<div id="container" style="min-width:400px;height:400px"></div>
+
 		</div>
 		
 		<!-- 查询区域-->
