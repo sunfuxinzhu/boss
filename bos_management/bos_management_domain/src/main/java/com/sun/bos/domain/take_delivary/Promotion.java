@@ -8,12 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * 宣传任务
  */
 @Entity
 @Table(name = "T_PROMOTION")
+@XmlRootElement(name = "promotion")
 public class Promotion {
 
     // Fields
